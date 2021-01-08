@@ -6,16 +6,20 @@
                 <div class="row">
 
                     <div class="col-xs-12 col-md-10 offset-md-1">
-                        <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-                        <h4>Eric Simons</h4>
-                        <p>
+                        <img :src="user.image" class="user-img" />
+                        <h4>{{ user.username }}</h4>
+                        <!-- <p>
                             Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta from the
                             Hunger Games
-                        </p>
-                        <button class="btn btn-sm btn-outline-secondary action-btn">
+                        </p> -->
+                        <button class="btn btn-sm btn-outline-secondary action-btn"
+                            :class="{
+                                active: user.following
+                            }"
+                        >
                             <i class="ion-plus-round"></i>
                             &nbsp;
-                            Follow Eric Simons
+                            Follow {{ user.username }}
                         </button>
                     </div>
 
@@ -88,9 +92,30 @@
 </template>
 
 <script>
+import {
+    getProfile
+} from '@/api/profile'
 export default {
 	middleware: 'authenticated',
-    name: 'UserProfile'
+    name: 'UserProfile',
+    data () {
+        return {
+            user: {},
+        }
+    },
+    mounted () {
+        this.initProfile(this.$route.params.username)
+        
+    },
+    methods: {
+        async initProfile (name) {
+            const { data } = await getProfile(name)
+            this.user = data.profile
+        }
+    },
+    // async asyncData ({ params }) {
+		
+	// },
 }
 </script>
 

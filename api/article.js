@@ -44,3 +44,11 @@ export const getComments = slug => {
         url: `/api/articles/${slug}/comments`
     })
 }
+
+export const creatArticle = data => {
+    return request({
+        method: 'POST',
+        url: '/api/articles',
+        data
+    })
+}
