@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { creatArticle } from '@/api/article'
+import { creatArticle,getArticle,updateArticle } from '@/api/article'
 export default {
 	middleware: 'authenticated',
     name: 'EditorIndex',
@@ -54,7 +54,18 @@ export default {
             disabled: false
         }
     },
+    mounted () {
+        let slug = this.$route.params.slug
+        if(slug) {
+            this.initAriticle(slug)
+        }
+    },
     methods: {
+        async initAriticle (slug) {
+            const { data } = await getArticle(slug)
+            const { article } = data;
+            this.article = article
+        },
         onSubmitTag () {
             let tagList = this.article.tagList
             let isSame = false
@@ -76,9 +87,14 @@ export default {
         },
         async saveCreate () {
             this.disabled = true
-            const { data } = await creatArticle({
-                article: this.article
-            })
+            const { data } = this.$route.params.slug
+                ? await updateArticle({
+                    article: this.article,
+                    slug: this.$route.params.slug
+                })
+                : await creatArticle({
+                    article: this.article
+                })
             this.disabled = true
             const slug = data.article.slug
             this.$router.push({

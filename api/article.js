@@ -52,3 +52,13 @@ export const creatArticle = data => {
         data
     })
 }
+
+export const updateArticle = data => {
+    return request({
+        method: 'PUT',
+        url: `/api/articles/${data.slug}`,
+        data: {
+            article: data.article
+        }
+    })
+}
